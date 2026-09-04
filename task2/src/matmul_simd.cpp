@@ -121,7 +121,7 @@ void matmul_simd(const float* A, const float* B, float* C,
                 acc0=_mm256_fmadd_ps(_mm256_loadu_ps(a0+k),bv,acc0);
                 acc1=_mm256_fmadd_ps(_mm256_loadu_ps(a1+k),bv,acc1);
                 acc2=_mm256_fmadd_ps(_mm256_loadu_ps(a2+k),bv,acc2);
-                acc2=_mm256_fmadd_ps(_mm256_loadu_ps(a2+k),bv,acc2);
+                acc3=_mm256_fmadd_ps(_mm256_loadu_ps(a2+k),bv,acc3);
                 acc4=_mm256_fmadd_ps(_mm256_loadu_ps(a4+k),bv,acc4);
                 acc5=_mm256_fmadd_ps(_mm256_loadu_ps(a5+k),bv,acc5);
             }
