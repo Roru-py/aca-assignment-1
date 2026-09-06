@@ -24,7 +24,7 @@ static inline float ezsum(__m256 x) {
 
 //most are same as prefetch.cpp because it already implements prefetching + simd + tiling + unrolling
 //we start by pasting prefetch and then modifying it to get a 25x speedup form 20x
-void matmul_optimized(const float* __restrict A, const float* __restrict B, float* __restrict C,
+void matmul_optimized(const float* A, const float* B, float* C,
                       int M, int N, int K, int lda, int ldb, int ldc) {
         const int tile_len=256; //256 chosen cos its best for this computer
         const int pf_dist=64;
@@ -33,12 +33,12 @@ void matmul_optimized(const float* __restrict A, const float* __restrict B, floa
             long jend= j0+tile_len<(long)N ? j0+tile_len : (long)N;
             long i=0;
             for(;i<=M-6;i+=6) {
-                const float* __restrict a0 = A + i*lda;
-                const float* __restrict a1 = A + (i+1)*lda;
-                const float* __restrict a2 = A + (i+2)*lda;
-                const float* __restrict a3 = A + (i+3)*lda;
-                const float* __restrict a4 = A + (i+4)*lda;
-                const float* __restrict a5 = A + (i+5)*lda;
+                const float* a0 = A + i*lda;
+                const float* a1 = A + (i+1)*lda;
+                const float* a2 = A + (i+2)*lda;
+                const float* a3 = A + (i+3)*lda;
+                const float* a4 = A + (i+4)*lda;
+                const float* a5 = A + (i+5)*lda;
 
                 long j=j0;
                 for(;j<=jend-2;j+=2) {
@@ -57,8 +57,8 @@ void matmul_optimized(const float* __restrict A, const float* __restrict B, floa
                     __m256 acc51 = _mm256_setzero_ps();
 
                     
-                    const float* __restrict b0 = B + j*ldb;
-                    const float* __restrict b1 = B + (j+1)*ldb;
+                    const float* b0 = B + j*ldb;
+                    const float* b1 = B + (j+1)*ldb;
 
                     long k=0;
                     #pragma GCC unroll 8
@@ -150,7 +150,7 @@ void matmul_optimized(const float* __restrict A, const float* __restrict B, floa
                     C[(i + 5)*ldc+j+1]=s51;
                 }
                 for(;j<jend;j++) {
-                    const float* __restrict b=B+j*ldb;
+                    const float* b=B+j*ldb;
 
                     __m256 acc0=_mm256_setzero_ps(); __m256 acc1=_mm256_setzero_ps();
                     __m256 acc2=_mm256_setzero_ps(); __m256 acc3=_mm256_setzero_ps();
